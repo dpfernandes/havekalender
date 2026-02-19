@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import pg, { Pool } from "pg";
 import { pool } from "./connection";
-import { CROPS } from "../../../assets/crops";
+import { CROPS } from "../data/crops";
 
 async function ensureDatabase() {
   if (process.env.DATABASE_URL) return; // managed env handles this

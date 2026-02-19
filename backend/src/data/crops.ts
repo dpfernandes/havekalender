@@ -5,25 +5,7 @@
  * Calibrated for Denmark's Köppen-Geiger Cfb climate.
  */
 
-type Category = "vegetable" | "herb" | "fruit";
-type Difficulty = "easy" | "medium" | "hard";
-
-interface CropData {
-  id: number;
-  name_da: string;
-  name_en: string;
-  category: Category;
-  icon: string;
-  sow_indoor: number[];
-  sow_outdoor: number[];
-  transplant: number[];
-  harvest: number[];
-  difficulty: Difficulty;
-  care_note_da: string;
-  care_note_en: string;
-}
-
-export const CROPS: CropData[] = [
+const CROPS = [
   { id: 1,  name_da: "Tomat",        name_en: "Tomato",       category: "vegetable", icon: "🍅", sow_indoor: [2,3],           sow_outdoor: [],             transplant: [5,6],   harvest: [7,8,9],         difficulty: "medium", care_note_da: "Start indendørs 8 uger før sidste frost. Kræver meget sol.",       care_note_en: "Start indoors 8 weeks before last frost. Needs full sun." },
   { id: 2,  name_da: "Agurk",        name_en: "Cucumber",     category: "vegetable", icon: "🥒", sow_indoor: [4],             sow_outdoor: [5],            transplant: [5,6],   harvest: [7,8,9],         difficulty: "medium", care_note_da: "Elsker varme. Plant i vindlæ.",                                   care_note_en: "Loves warmth. Plant in a sheltered spot." },
   { id: 3,  name_da: "Gulerod",      name_en: "Carrot",       category: "vegetable", icon: "🥕", sow_indoor: [],              sow_outdoor: [3,4,5,6,7],    transplant: [],      harvest: [6,7,8,9,10],    difficulty: "easy",   care_note_da: "Løs, stenfri jord giver de bedste gulerødder.",                  care_note_en: "Loose, stone-free soil gives the best carrots." },
@@ -55,3 +37,6 @@ export const CROPS: CropData[] = [
   { id: 29, name_da: "Rucola",       name_en: "Rocket",       category: "vegetable", icon: "🥗", sow_indoor: [],              sow_outdoor: [4,5,6,7,8],    transplant: [],      harvest: [5,6,7,8,9,10],  difficulty: "easy",   care_note_da: "Sår løbende. Bolter hurtigt i varmen.",                        care_note_en: "Sow successively. Bolts quickly in heat." },
   { id: 30, name_da: "Selleri",      name_en: "Celery",       category: "vegetable", icon: "🌿", sow_indoor: [2,3],           sow_outdoor: [],             transplant: [5],     harvest: [8,9,10],        difficulty: "hard",   care_note_da: "Kræver fugtig, næringsrig jord og lang vækstperiode.",          care_note_en: "Needs moist, rich soil and a long growing period." },
 ];
+
+export { CROPS };
+export default CROPS;

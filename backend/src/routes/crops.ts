@@ -5,7 +5,8 @@ export const cropsRouter = Router();
 
 /** GET /api/crops/month/:month — plant + harvest lists for a given month (1–12) */
 cropsRouter.get("/month/:month", async (req: Request, res: Response) => {
-  const month = parseInt(req.params.month, 10);
+  const monthParam = Array.isArray(req.params.month) ? req.params.month[0] : req.params.month;
+  const month = parseInt(monthParam, 10);
   if (isNaN(month) || month < 1 || month > 12) {
     res.status(400).json({ error: "Month must be an integer between 1 and 12." });
     return;
@@ -36,7 +37,8 @@ cropsRouter.get("/", async (req: Request, res: Response) => {
 
 /** GET /api/crops/:id — full crop detail */
 cropsRouter.get("/:id", async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id, 10);
+  const idParam = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const id = parseInt(idParam, 10);
   if (isNaN(id)) { res.status(400).json({ error: "ID must be an integer." }); return; }
   try {
     const result = await pool.query("SELECT * FROM crops WHERE id = $1", [id]);
@@ -71,7 +73,8 @@ cropsRouter.post("/", async (req: Request, res: Response) => {
 
 /** PUT /api/crops/:id — update an existing crop */
 cropsRouter.put("/:id", async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id, 10);
+  const idParam = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const id = parseInt(idParam, 10);
   if (isNaN(id)) { res.status(400).json({ error: "ID must be an integer." }); return; }
   const { name_da, name_en, category, icon, sow_indoor, sow_outdoor, transplant, harvest, difficulty, care_note_da, care_note_en } = req.body;
   try {
@@ -95,7 +98,8 @@ cropsRouter.put("/:id", async (req: Request, res: Response) => {
 
 /** DELETE /api/crops/:id — delete a crop */
 cropsRouter.delete("/:id", async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id, 10);
+  const idParam = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const id = parseInt(idParam, 10);
   if (isNaN(id)) { res.status(400).json({ error: "ID must be an integer." }); return; }
   try {
     const result = await pool.query("DELETE FROM crops WHERE id = $1 RETURNING id", [id]);

@@ -10,6 +10,17 @@ app.use(express.json());
 
 app.use("/api/crops", cropsRouter);
 
+app.get("/", (_req, res) => {
+  res.json({
+    message: "HaveKalender API",
+    version: "0.1.0",
+    endpoints: {
+      health: "/health",
+      crops: "/api/crops"
+    }
+  });
+});
+
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "havekalender-api", timestamp: new Date().toISOString() });
 });

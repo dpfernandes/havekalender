@@ -1,6 +1,7 @@
 import { useMemo } from "react";
-import { CROPS } from "../../../assets/crops";
+import { CROPS } from "../data/crops";
 import { getPlantCropsForMonth, getHarvestCropsForMonth } from "../utils/cropHelpers";
+import type { Crop } from "../types";
 
 /**
  * Returns filtered plant/harvest lists for the given month.
@@ -11,7 +12,8 @@ import { getPlantCropsForMonth, getHarvestCropsForMonth } from "../utils/cropHel
  *   }, [month]);
  */
 export function useCrops(month: number) {
-  const plant   = useMemo(() => getPlantCropsForMonth(CROPS, month),   [month]);
-  const harvest = useMemo(() => getHarvestCropsForMonth(CROPS, month), [month]);
-  return { crops: CROPS, plant, harvest };
+  const crops = CROPS as Crop[];
+  const plant   = useMemo(() => getPlantCropsForMonth(crops, month),   [month]);
+  const harvest = useMemo(() => getHarvestCropsForMonth(crops, month), [month]);
+  return { crops, plant, harvest };
 }
