@@ -7,10 +7,13 @@
     <meta name="description" content="Månedlig haveguide til Danmark — hvad du skal plante og høste hver måned." />
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      body { background: #060e05; }
+      body { background: #060e05; transition: background 0.3s; }
+      body[data-theme="light"] { background: #f8faf8; }
       ::-webkit-scrollbar { width: 6px; height: 6px; }
       ::-webkit-scrollbar-track { background: #060e05; }
+      body[data-theme="light"] ::-webkit-scrollbar-track { background: #f0f4f0; }
       ::-webkit-scrollbar-thumb { background: #1e3a1a; border-radius: 3px; }
+      body[data-theme="light"] ::-webkit-scrollbar-thumb { background: #b8d4b5; }
     </style>
   </head>
   <body>
