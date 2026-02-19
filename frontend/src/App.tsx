@@ -19,7 +19,7 @@ type Page = "calendar" | "admin";
 
 export default function App() {
   const { month, setMonth, prevMonth, nextMonth, lang, toggleLang } = useCalendar();
-  const { crops, plant, harvest } = useCrops(month);
+  const { crops, plant, harvest, loading, error } = useCrops(month);
   const { isDark, toggleDarkMode } = useDarkMode();
   const theme = getTheme(isDark);
   const [activeTab, setActiveTab]       = useState<Tab>("plant");
@@ -36,6 +36,29 @@ export default function App() {
 
   if (page === "admin") {
     return <AdminPage onBack={() => setPage("calendar")} />;
+  }
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: "100vh", background: theme.bg.primary, color: theme.text.primary, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🌱</div>
+          <div style={{ fontSize: 18, fontFamily: "'Playfair Display',serif" }}>Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ minHeight: "100vh", background: theme.bg.primary, color: theme.text.primary, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center", maxWidth: 400, padding: 24 }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
+          <div style={{ fontSize: 18, fontFamily: "'Playfair Display',serif", marginBottom: 8 }}>Error loading data</div>
+          <div style={{ fontSize: 14, color: theme.text.secondary }}>{error}</div>
+        </div>
+      </div>
+    );
   }
 
   return (
