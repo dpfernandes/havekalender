@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
+import { supabase } from "../lib/supabase";
 import type { Crop } from "../types";
-
-const API = "/api/crops";
 
 export function useAdminCrops() {
   const [crops, setCrops]     = useState<Crop[]>([]);
@@ -12,11 +11,15 @@ export function useAdminCrops() {
     setLoading(true);
     setError(null);
     try {
-      const res  = await fetch(API);
-      const data = await res.json();
-      setCrops(data.crops);
-    } catch {
-      setError("Failed to load crops.");
+      const { data, error } = await supabase
+        .from('crops')
+        .select('*')
+        .order('name_da');
+
+      if (error) throw error;
+      setCrops((data as Crop[]) || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load crops.");
     } finally {
       setLoading(false);
     }
@@ -25,24 +28,62 @@ export function useAdminCrops() {
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const createCrop = async (body: Omit<Crop, "id">): Promise<Crop> => {
-    const res  = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error ?? "Create failed.");
+    const { data, error } = await (supabase as any)
+      .from('crops')
+      .insert({
+        name_da: body.name_da,
+        name_en: body.name_en,
+        category: body.category,
+        icon: body.icon,
+        sow_indoor: body.sow_indoor,
+        sow_outdoor: body.sow_outdoor,
+        transplant: body.transplant,
+        harvest: body.harvest,
+        difficulty: body.difficulty,
+        care_note_da: body.care_note_da,
+        care_note_en: body.care_note_en,
+      })
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message ?? "Create failed.");
     await fetchAll();
-    return data.crop;
+    return data as Crop;
   };
 
   const updateCrop = async (id: number, body: Omit<Crop, "id">): Promise<Crop> => {
-    const res  = await fetch(`${API}/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error ?? "Update failed.");
+    const { data, error } = await (supabase as any)
+      .from('crops')
+      .update({
+        name_da: body.name_da,
+        name_en: body.name_en,
+        category: body.category,
+        icon: body.icon,
+        sow_indoor: body.sow_indoor,
+        sow_outdoor: body.sow_outdoor,
+        transplant: body.transplant,
+        harvest: body.harvest,
+        difficulty: body.difficulty,
+        care_note_da: body.care_note_da,
+        care_note_en: body.care_note_en,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message ?? "Update failed.");
     await fetchAll();
-    return data.crop;
+    return data as Crop;
   };
 
   const deleteCrop = async (id: number): Promise<void> => {
-    const res = await fetch(`${API}/${id}`, { method: "DELETE" });
-    if (!res.ok) { const data = await res.json(); throw new Error(data.error ?? "Delete failed."); }
+    const { error } = await supabase
+      .from('crops')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw new Error(error.message ?? "Delete failed.");
     await fetchAll();
   };
 

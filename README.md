@@ -8,40 +8,40 @@ Danish Garden Planting & Harvest Calendar — bilingual (DA/EN) web app for smal
 havekalender/
 ├── package.json          ← Root — install everything from here
 ├── assets/
-│   └── crops.ts          ← Single source of truth for all 30 crops
-├── frontend/
-│   ├── index.html
-│   ├── vite.config.ts
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── src/
-│       ├── main.tsx
-│       ├── App.tsx
-│       ├── types/index.ts
-│       ├── utils/constants.ts
-│       ├── utils/cropHelpers.ts
-│       ├── hooks/useCalendar.ts
-│       ├── hooks/useCrops.ts
-│       └── components/
-│           ├── Header.tsx
-│           ├── MonthStrip.tsx
-│           ├── MonthNav.tsx
-│           ├── TipBanner.tsx
-│           ├── CropCard.tsx
-│           ├── HarvestCard.tsx
-│           ├── YearBar.tsx
-│           ├── CropDetail.tsx
-│           └── Footer.tsx
-└── backend/
+│   └── crops.ts          ← Crop data reference
+└── frontend/
+    ├── index.html
+    ├── vite.config.ts
     ├── package.json
     ├── tsconfig.json
     └── src/
-        ├── index.ts
-        ├── routes/crops.ts
-        └── db/
-            ├── connection.ts
-            ├── schema.sql
-            └── seed.ts
+        ├── main.tsx
+        ├── App.tsx
+        ├── lib/
+        │   └── supabase.ts     ← Supabase client
+        ├── types/
+        │   ├── index.ts
+        │   └── database.ts
+        ├── utils/
+        │   ├── constants.ts
+        │   └── cropHelpers.ts
+        ├── hooks/
+        │   ├── useCalendar.ts
+        │   ├── useCrops.ts
+        │   └── useAdminCrops.ts
+        └── components/
+            ├── Header.tsx
+            ├── MonthStrip.tsx
+            ├── MonthNav.tsx
+            ├── TipBanner.tsx
+            ├── CropCard.tsx
+            ├── HarvestCard.tsx
+            ├── YearBar.tsx
+            ├── CropDetail.tsx
+            ├── Footer.tsx
+            └── admin/
+                ├── AdminPage.tsx
+                └── CropForm.tsx
 ```
 
 ## Getting Started
@@ -53,42 +53,32 @@ npm install
 
 ### Database
 
-The seed script handles everything automatically when `DATABASE_URL` is not set:
-- Creates the `havekalender` database if it doesn't exist
-- Applies the schema
-- Seeds all 30 crops
+This project uses **Supabase** as its database. The database is already set up with:
+- A `crops` table storing all 30 Danish crops
+- Row Level Security (RLS) policies for public read access
+- Authenticated write access for admin operations
 
-On **macOS with Homebrew PostgreSQL**, the OS username is used by default (no `PGUSER` needed):
-```bash
-npm run seed
-```
-
-On other systems, or to be explicit:
-```bash
-PGUSER=myuser npm run seed
-```
-
-For a managed database (Railway, Supabase, etc.), set `DATABASE_URL` and run:
-```bash
-DATABASE_URL=postgres://... npm run seed
-```
+The database connection is configured via environment variables in `.env`:
+- `VITE_SUPABASE_URL` - Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
 
 ### Running the app
 
-Start both frontend and backend together:
+Start the development server:
 ```bash
 npm run dev
 ```
 
-Or separately:
-```bash
-npm run dev:frontend   # http://localhost:5173
-npm run dev:backend    # http://localhost:3001
-```
+The app will be available at `http://localhost:5173`
 
 Build for production:
 ```bash
 npm run build
+```
+
+Preview production build:
+```bash
+npm run preview
 ```
 
 ## Climate
